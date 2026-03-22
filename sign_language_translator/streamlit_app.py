@@ -20,6 +20,9 @@ import streamlit as st
 from pathlib import Path
 from collections import deque
 from streamlit_webrtc import webrtc_streamer, WebRtcMode
+from cleaning_file import clean
+from duplicates_and_suffixes import handle_duplicates
+from llm_inference import infer
 
 from asl_citizen_processor import Extractor, FEATURE_DIM
 from lstm_model import Video_LSTM
@@ -295,6 +298,21 @@ with col_panel:
 with shared["lock"]:
     results = list(shared["results"])
     history = list(shared["history"])
+    # TODO (extension): -history 
+# TODO : cleaning_file.py: history -> cleaning file, what this cleaning file should incorporate putting consecutive letters andd putting it into a word
+# TODO : add a hotkey to detect spacebar as "\n" in the history
+# TODO : add an end gesture to detect spacebar as "\n" in the history
+# TODO : duplicates_and_suffixes.py: add point in processing pipeline that uses the sign-language-translator Python library to clean up the string (remove duplicates, handle common ASL suffixes), and handle spaces.
+# TODO : llm_inference.py Inference: Pass that normalized string into a small, fine-tuned LLM (like a T5-base model hosted on Hugging Face) or use an LLM prompt like: "Translate the following ASL Glosses into a natural English sentence: [YOUR_STRING_HERE]"
+
+# TODO (REACH) : get time from last gesture, incorporate into all other logic
+    clean(list)
+    handle_duplicates(list)
+    infer(list)
+
+    
+
+
 
 # TODO (extension): make show_predictions and show_history look however you want!
 # you can use st.metric(), progress bars, custom CSS.

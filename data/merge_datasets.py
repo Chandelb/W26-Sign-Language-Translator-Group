@@ -306,6 +306,7 @@ if __name__ == "__main__":
         nargs="*",
         help="Input _processed directories to merge"
     )
+    # python3 merge_datasets.py asl_citizen_process asl_glosses --output outputFolder
     parser.add_argument(
         "--output",
         required=False,

@@ -189,18 +189,6 @@ def visualize_results(results: dict, save_prefix: str = ""):
 
     print(f"losses saved to {loss_plot}")
     print(f"accuracies saved to {accuracy_plot}")
-
-    # plot confusion matrix
-    ####################################################################
-    ####################################################################
-    ####################################################################
-    ####################################################################
-    label_map_df = pd.read_csv("asl_citizen_processed/label_map.csv")
-    class_names = label_map_df['gloss'].unique()
-    plot_confusion_matrix(results, class_names, save_prefix)
-    ####################################################################
-    ####################################################################
-    ####################################################################
     #plt.show()
 
 
@@ -211,37 +199,21 @@ def plot_confusion_matrix(results: dict, class_names=None, save_prefix: str = ""
 
     fig, axes = plt.subplots(1, 2, figsize=(18, 7))
     
-    if class_names is not None:
-        class_names = list(class_names)
-        labels = list(range(len(class_names)))
-    else:
-        labels = None
-
     for idx, dataset in enumerate(["train", "val"]):
         y_true = results[f"{dataset}_labels"]
         y_pred = results[f"{dataset}_predictions"]
-
-        cm = confusion_matrix(y_true, y_pred, labels=labels)
+        
+        cm = confusion_matrix(y_true, y_pred)
     
         # normalize by gloss frequency
-        row_sums = cm.sum(axis=1, keepdims=True)
-        cm = np.divide(
-            cm.astype("float"),
-            row_sums,
-            out=np.zeros_like(cm, dtype=float),
-            where=row_sums != 0,
-        )
+        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
         fmt = '.2f'
         #fmt = 'd'
-
-        annot_labels = np.where(cm > 0, np.char.mod('%.2f', cm), '')
-        if len(class_names) > 45:
-            annot_labels = False
-
+    
         ax = axes[idx]
-        sns.heatmap(cm, annot=annot_labels, fmt='', cmap='Blues', 
-                    xticklabels=class_names if class_names is not None else labels,
-                    yticklabels=class_names if class_names is not None else labels,
+        sns.heatmap(cm, annot=True, fmt=fmt, cmap='Blues', 
+                    xticklabels=class_names if class_names else 'auto',
+                    yticklabels=class_names if class_names else 'auto',
                     ax=ax)
         ax.set_ylabel('True Label')
         ax.set_xlabel('Predicted Label')

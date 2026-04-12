@@ -1,6 +1,12 @@
 # TODO: Normalization: Use the sign-language-translator Python library to clean up the string (remove duplicates, handle common ASL suffixes).
 import sign_language_translator as slt
 
+# Common ASL suffixes that modify word meaning
+ASL_SUFFIXES = [
+    'ing', 'ed', 'er', 'est', 'ly', 'ful', 'less', 'ment',
+    'tion', 'sion', 'able', 'ible', 'ous', 'ious'
+]
+
 def handle_duplicates(history):
     if not history:
         return history

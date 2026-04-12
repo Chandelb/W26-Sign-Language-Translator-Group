@@ -213,7 +213,7 @@ class ASLCitizenProcessor:
         self.src_dir    = Path(src_directory)
         self.min_frames = min_frames
         self.max_videos = max_videos
-        self.tgt_dir    = self.src_dir.parent / "asl_citizen_processed"
+        self.tgt_dir    = self.src_dir.parent / "final_merged"
 
         for split in ["train", "val", "test"]:
             (self.tgt_dir / split).mkdir(parents=True, exist_ok=True)
